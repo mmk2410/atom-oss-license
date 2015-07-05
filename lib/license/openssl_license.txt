@@ -1,0 +1,52 @@
+The OpenSSL License and The GPL
+
+At least twice previously I've gone off and figured out what this whole OpenSSL GPL incompatibility thing is all about. Both times I know I mostly understood the issue, but not entirely, so I inevitably forgot the details in pretty short order. Well, I've just figured it out again.
+
+Interestingly, Google didn't actually turn up anywhere that actually explained the issue but rather lots of vague references to the "obnoxious advertising" clause and the "obvious" problems which that entails. Well, its not obvious to me and I'm going to write it down so I don't forget.
+
+The OpenSSL F.A.Q. entry on the issue is pretty descriptive in retrospect. But what are the actual relevant license clauses? Well, the OpenSSL license contains the following two clauses:
+
+   * 3. All advertising materials mentioning features or use of this
+   *    software must display the following acknowledgment:
+   *    "This product includes software developed by the OpenSSL Project
+   *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"
+
+   * 6. Redistributions of any form whatsoever must retain the following
+   *    acknowledgment:
+   *    "This product includes software developed by the OpenSSL Project
+   *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"
+These clauses impose restrictions on people wishing to distribute your program. If your program is licensed under the GPL, these restrictions conflict with the following clause in the GPL
+
+    6. Each time you redistribute the Program (or any work based on the
+  Program), the recipient automatically receives a license from the
+  original licensor to copy, distribute or modify the Program subject to
+  these terms and conditions.  You may not impose any further
+  restrictions on the recipients' exercise of the rights granted herein.
+Now, the GPL also contains a "special exception" which allows your GPL-ed program to link against GPL incompatible libraries which are shipped as part of the operating system that the executable runs on:
+  The source code for a work means the preferred form of the work for
+  making modifications to it.  For an executable work, complete source
+  code means all the source code for all modules it contains, plus any
+  associated interface definition files, plus the scripts used to
+  control compilation and installation of the executable.  However, as a
+  special exception, the source code distributed need not include
+  anything that is normally distributed (in either source or binary
+  form) with the major components (compiler, kernel, and so on) of the
+  operating system on which the executable runs, unless that component
+  itself accompanies the executable.
+There is some disagreement about what this exception means when the both the GPL program and the GPL incompatible library are shipped as part of the operating system. The "unless that component itself accompanies the executable" clause suggests that the special exception does not cover this case and that it is a violation of the GPL. Debian takes this position on the issue.
+
+One recommended way around this GPL incompatibility is to add an OpenSSL exemption when you license your code under the GPL. See this mail from debian-legal to a developer which suggests the following wording for the exemption:
+
+ * In addition, as a special exception, the copyright holders give
+ * permission to link the code of portions of this program with the
+ * OpenSSL library under certain conditions as described in each
+ * individual source file, and distribute linked combinations
+ * including the two.
+ * You must obey the GNU General Public License in all respects
+ * for all of the code used other than OpenSSL.  If you modify
+ * file(s) with this exception, you may extend this exception to your
+ * version of the file(s), but you are not obligated to do so.  If you
+ * do not wish to do so, delete this exception statement from your
+ * version.  If you delete this exception statement from all source
+ * files in the program, then also delete it here.
+The conclusion I draw from all this is that if want to use OpenSSL with a GPL program you should consider whether an OpenSSL exemption to the license is viable - i.e. do all the copyright holders for the affected code agree? Failing that, you could distribute the GPL program using OpenSSL but you are effectively trusting that the copyright holders for that program don't care. A much safer option is to use either the GNU TLS or Mozilla NSS library.

@@ -1,0 +1,17 @@
+{
+  "name": "atom-oss-license",
+  "main": "./lib/atom-oss-license",
+  "version": "1.0.0",
+  "description": "A simple package to add a OSS license to your file.",
+  "keywords": [
+      "licenses",
+      "oss"
+  ],
+  "repository": "https://github.com/mmk2410/atom-oss-license",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+  }
+}
