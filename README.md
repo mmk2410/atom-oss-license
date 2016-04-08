@@ -4,6 +4,8 @@ A simple package to add a OSS license to your file. It is inspired by atom-licen
 
 ![Screenshot](https://marcel-kapfer.de/res/img/atom-oss-license.png)
 
+This is a copy of git.mmk2410.org/atom-oss-license/
+
 ## Usage
 
 `ctlr+shift+P` (Windows and Linux) / `cmd+shit+P` (Mac)
@@ -81,11 +83,9 @@ The following licenses are included:
 
 ## Contributing
 
- 1. Fork it
- 2. Create your feature branch (`git checkout -b my-new-feature`)
- 3. Commit your changes (`git commit -am 'Add some feature'`)
- 4. Push to the branch (`git push origin my-new-feature`)
- 5. Create New Pull Request
+Although you can contribute using GitHub I would prefer it, if you would use the repo at git.mmk2410.org/atom-oss-license/
+
+For contributing on git.mmk2410.org read the contributing guidlines at https://marcel-kapfer.de/contribute/
 
 ### Useful snippets for contributors
 
