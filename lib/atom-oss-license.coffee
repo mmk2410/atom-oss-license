@@ -26,6 +26,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ###
 
 {CompositeDisposable} = require 'atom'
+YearRange = require './year-range'
 
 module.exports = AtomOssLicense =
   subscriptions: null
@@ -113,6 +114,7 @@ module.exports = AtomOssLicense =
       'License: Open Recipe License': => @open_recipe_license()
       'License: Toogle Copyright line': => @toggle_copyright()
       'License: Toggle Header': => @toggle_header()
+      'License: Update': => @updateCopyright(atom.workspace.getActiveTextEditor())
 
   deactivate: ->
     @subscriptions.dispose()
@@ -274,30 +276,75 @@ module.exports = AtomOssLicense =
     else
       atom.config.set("atom-oss-license.xheader", true)
 
+  # Determines if the supplied object already contains a copyright notice.
+  # Only checks for a copyright notice in the first ten lines of the file.
+  #
+  # * `obj` Buffer to check for a copyright notice, either a {TextEditor} or {TextBuffer}.
+  #
+  # Returns a {Boolean} indicating whether this buffer has a copyright notice.
+  hasCopyright: (obj) ->
+    return @hasCopyright(obj.buffer) if obj.buffer?
+
+    @hasCopyrightInText(obj.getTextInRange([[0, 0], [10, 0]]))
+
+  # Determines if the supplied text has a copyright notice.
+  #
+  # * `text` {String} of the text within which to search for a copyright notice.
+  #
+  # Returns {Boolean} indicating whether this text has a copyright notice.
+  hasCopyrightInText: (text) ->
+    text.match(/Copyright \(c\)/m)
+
+  #  After `callback` is called, puts the cursor back where it was before.
+  #
+  # * `editor` {TextEditor} where the cursor is.
+  # * `callback` A {Function} that manipulates the cursor position.
+  restoreCursor: (editor, callback) ->
+    marker = editor.markBufferPosition(editor.getCursorBufferPosition(), persistent: false)
+    callback()
+    editor.setCursorBufferPosition(marker.getHeadBufferPosition())
+    marker.destroy()
+
+  # Updates copyright in the first ten lines.
+  #
+  # * `editor` {TextEditor} where the copyright should be updated.
+  updateCopyright: (editor = atom.workspace.getActiveTextEditor()) ->
+    if @hasCopyright(editor)
+      editor.scanInBufferRange YearRange.pattern, [[0, 0], [10, 0]], ({matchText, replace}) ->
+        yearRange = new YearRange(matchText)
+        yearRange.addYear(new Date().getFullYear())
+        replace(yearRange.toString())
+
   addLicense: (license) ->
-    fs = require 'fs'
-    filename = __dirname + "/license/" + license + ".txt"
-    fs.readFile filename, 'utf8', (err, contents) ->
-      if not err
-        editor = atom.workspace.getActiveTextEditor()
-        copybool = atom.config.get("atom-oss-license.copyright")
-        headerbool = atom.config.get("atom-oss-license.xheader")
-        if copybool
-          today = new Date
-          year = today.getFullYear()
-          name = atom.config.get("atom-oss-license.name")
-          if name is ""
-            name = "<YOUR NAME>"
-          copyright = "COPYRIGHT (c) #{year} #{name}"
-          contents = "#{copyright}\n\n#{contents}"
-        editor.insertText(contents)
-        if headerbool
-          headerpath = atom.config.get("atom-oss-license.xheaderpath")
-          if headerpath?
-            fs.readFile headerpath, 'utf8', (err, headercontents) ->
-              if not err
-                editor.insertText("\n\n\n#{headercontents}")
-              else
-                console.log err
-      else
-        console.log err
+    editor = atom.workspace.getActiveTextEditor()
+    unless @hasCopyright(editor)
+      @restoreCursor editor, =>
+        editor.transact =>
+          fs = require 'fs'
+          filename = __dirname + "/license/" + license + ".txt"
+          fs.readFile filename, 'utf8', (err, contents) ->
+            if not err
+              copybool = atom.config.get("atom-oss-license.copyright")
+              headerbool = atom.config.get("atom-oss-license.xheader")
+              if copybool
+                year = new YearRange(new Date().getFullYear())
+                name = atom.config.get("atom-oss-license.name")
+                if name is ""
+                  name = "<YOUR NAME>"
+                copyright = "Copyright (c) #{year} #{name}"
+                contents = "#{copyright}\n\n#{contents}"
+              editor.setCursorBufferPosition([0, 0], autoscroll: false)
+              editor.insertText(contents, select: true)
+              editor.toggleLineCommentsInSelection()
+              editor.setCursorBufferPosition(editor.getSelectedBufferRange().end)
+              editor.insertText("\n")
+              if headerbool
+                headerpath = atom.config.get("atom-oss-license.xheaderpath")
+                if headerpath?
+                  fs.readFile headerpath, 'utf8', (err, headercontents) ->
+                    if not err
+                      editor.insertText("\n\n#{headercontents}")
+                    else
+                      console.log err
+            else
+              console.log err
