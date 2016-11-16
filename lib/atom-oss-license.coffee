@@ -1,29 +1,25 @@
-###
-
-COPYRIGHT (c) 2015 mmk2410
-
-MIT License
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-###
+# Copyright (c) 2015, 2016 Marcel Kapfer (mmk2410) and friends
+#
+# MIT License
+#
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 {CompositeDisposable} = require 'atom'
 YearRange = require './year-range'
@@ -114,7 +110,8 @@ module.exports = AtomOssLicense =
       'License: Open Recipe License': => @open_recipe_license()
       'License: Toogle Copyright line': => @toggle_copyright()
       'License: Toggle Header': => @toggle_header()
-      'License: Update Year': => @updateCopyright(atom.workspace.getActiveTextEditor())
+      'License: Update Year':
+        => @updateCopyright(atom.workspace.getActiveTextEditor())
 
   deactivate: ->
     @subscriptions.dispose()
@@ -201,7 +198,6 @@ module.exports = AtomOssLicense =
     @addLicense('zope_public_license')
 
   apache: ->
-    console.log "Apache License"
     @addLicense('apache')
 
   artistic: ->
@@ -279,7 +275,8 @@ module.exports = AtomOssLicense =
   # Determines if the supplied object already contains a copyright notice.
   # Only checks for a copyright notice in the first ten lines of the file.
   #
-  # * `obj` Buffer to check for a copyright notice, either a {TextEditor} or {TextBuffer}.
+  # * `obj` Buffer to check for a copyright notice,
+  # either a {TextEditor} or {TextBuffer}.
   #
   # Returns a {Boolean} indicating whether this buffer has a copyright notice.
   hasCopyright: (obj) ->
@@ -300,7 +297,8 @@ module.exports = AtomOssLicense =
   # * `editor` {TextEditor} where the cursor is.
   # * `callback` A {Function} that manipulates the cursor position.
   restoreCursor: (editor, callback) ->
-    marker = editor.markBufferPosition(editor.getCursorBufferPosition(), persistent: false)
+    marker = editor.markBufferPosition(
+      editor.getCursorBufferPosition(), persistent: false)
     callback()
     editor.setCursorBufferPosition(marker.getHeadBufferPosition())
     marker.destroy()
@@ -310,7 +308,8 @@ module.exports = AtomOssLicense =
   # * `editor` {TextEditor} where the copyright should be updated.
   updateCopyright: (editor = atom.workspace.getActiveTextEditor()) ->
     if @hasCopyright(editor)
-      editor.scanInBufferRange YearRange.pattern, [[0, 0], [10, 0]], ({matchText, replace}) ->
+      editor.scanInBufferRange YearRange.pattern,
+        [[0, 0], [10, 0]], ({matchText, replace}) ->
         yearRange = new YearRange(matchText)
         yearRange.addYear(new Date().getFullYear())
         replace(yearRange.toString())
@@ -318,8 +317,8 @@ module.exports = AtomOssLicense =
   addLicense: (license) ->
     editor = atom.workspace.getActiveTextEditor()
     unless @hasCopyright(editor)
-      @restoreCursor editor, =>
-        editor.transact =>
+      @restoreCursor editor, ->
+        editor.transact ->
           fs = require 'fs'
           filename = __dirname + "/license/" + license + ".txt"
           fs.readFile filename, 'utf8', (err, contents) ->
@@ -336,7 +335,8 @@ module.exports = AtomOssLicense =
               editor.setCursorBufferPosition([0, 0], autoscroll: false)
               editor.insertText(contents, select: true)
               editor.toggleLineCommentsInSelection()
-              editor.setCursorBufferPosition(editor.getSelectedBufferRange().end)
+              editor.setCursorBufferPosition(
+                editor.getSelectedBufferRange().end)
               editor.insertText("\n")
               if headerbool
                 headerpath = atom.config.get("atom-oss-license.xheaderpath")

@@ -48,7 +48,8 @@ class YearRange
 
     text
 
-  # Internal: Converts the text representation into a numeric array representation.
+  # Internal: Converts the text representation
+  # into a numeric array representation.
   #
   # * `text` {String} of the year range to convert.
   convert: (text) ->
@@ -62,12 +63,14 @@ class YearRange
 
     @values = temp
 
-  # Internal: Converts the text representation of a single element of a year range into a numeric
+  # Internal: Converts the text representation of a
+  # single element of a year range into a numeric
   # array representation.
   #
   # * `text` {String} containing a component of a year range.
   #
-  # Returns either an {Array} of numbers representing a year range or a single year {Number}.
+  # Returns either an {Array} of numbers representing a
+  # year range or a single year {Number}.
   convertItem: (text) ->
     if text.match /\d{4}-\d{4}/
       [start, end] = text.split('-')
