@@ -114,7 +114,7 @@ module.exports = AtomOssLicense =
       'License: Open Recipe License': => @open_recipe_license()
       'License: Toogle Copyright line': => @toggle_copyright()
       'License: Toggle Header': => @toggle_header()
-      'License: Update': => @updateCopyright(atom.workspace.getActiveTextEditor())
+      'License: Update Year': => @updateCopyright(atom.workspace.getActiveTextEditor())
 
   deactivate: ->
     @subscriptions.dispose()
