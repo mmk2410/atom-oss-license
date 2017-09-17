@@ -1,4 +1,4 @@
-# Copyright (c) 2015, 2016 Marcel Kapfer (mmk2410) and friends
+# Copyright (c) 2015 - 2017 Marcel Kapfer (mmk2410) and friends
 #
 # MIT License
 #
