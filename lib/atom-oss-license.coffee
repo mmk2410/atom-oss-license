@@ -22,6 +22,8 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 {CompositeDisposable} = require 'atom'
+{Point} = require 'atom'
+{Range} = require 'atom'
 YearRange = require './year-range'
 
 module.exports = AtomOssLicense =
@@ -282,7 +284,11 @@ module.exports = AtomOssLicense =
   hasCopyright: (obj) ->
     return @hasCopyright(obj.buffer) if obj.buffer?
 
-    @hasCopyrightInText(obj.getTextInRange([[0, 0], [10, 0]]))
+    # earlier (until 1.1.2) @hasCopyrightInText was called with [[0,0],[10,0]]
+    # but due to some strange change in (presumably) Atom 1.19.2 this no longer
+    # works
+    range = new Range(new Point(0,0), new Point(10,0))
+    @hasCopyrightInText(obj.getTextInRange(range))
 
   # Determines if the supplied text has a copyright notice.
   #
