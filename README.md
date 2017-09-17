@@ -2,29 +2,30 @@
 
 A simple package to add a OSS license to your file. It is inspired by atom-license and license-plus, but complete rewritten. It has no deprecations, includes **48 Licenses** and a few features for customizing the license.
 
-![Screenshot](https://marcel-kapfer.de/res/img/atom-oss-license.png)
+![Screenshot](https://mmk2410.org/wp-content/uploads/2017/09/atom-oss-license.png)
 
 ## Usage
 
 ### Adding a license
 
-`ctlr+shift+p` (Windows and Linux) / `cmd+shift+p` (Mac)
+`CTRL+SHIFT+P` (Windows and Linux) / `CMD+SHIFT+P` (Mac)
 
 Search for **License** and choose one you like
 
 ### Updating the license year
 
-`ctrl+shift+p` (Windows and Linux) / `cmd+shift+p` (Mac)
+`CTRL+SHIFT+P` (Windows and Linux) / `CMD+SHIFT+P` (Mac)
 
 Search for **License: Update Year**
 
 ## Copyright Line
 
 This feature is enabled by default, but you can disable it in the package settings and with *License: Toggle Copyright Line* in the command palette.
-
 The Copyright Line looks like this:
 
-```COPYRIGHT (c) <YEAR> <NAME>```
+```
+COPYRIGHT (c) <YEAR> <NAME>
+```
 
 The package automatically inserts the current year and you can set the name in the package settings.
 
