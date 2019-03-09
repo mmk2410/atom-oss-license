@@ -1,5 +1,7 @@
 # atom-oss-license
 
+[![Unmaintained](https://img.shields.io/maintenance/no/2017.svg)]() [![License MIT](https://img.shields.io/apm/l/atom-oss-license.svg)](LICENSE)
+
 A simple package to add a OSS license to your file. It is inspired by atom-license and license-plus, but complete rewritten. It has no deprecations, includes **48 Licenses** and a few features for customizing the license.
 
 ![Screenshot](https://mmk2410.org/wp-content/uploads/2017/09/atom-oss-license.png)
