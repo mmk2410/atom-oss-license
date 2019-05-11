@@ -304,7 +304,7 @@ module.exports = AtomOssLicense =
   # * `callback` A {Function} that manipulates the cursor position.
   restoreCursor: (editor, callback) ->
     marker = editor.markBufferPosition(
-      editor.getCursorBufferPosition(), persistent: false)
+      editor.getCursorBufferPosition())
     callback()
     editor.setCursorBufferPosition(marker.getHeadBufferPosition())
     marker.destroy()
